@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test</title>
+  </head>
+  <body>
+    <script>
+      const graph = {
+        A: ["B", "C"],
+        B: ["D"],
+        C: ["D", "E"],
+        D: ["F"],
+        E: ["F"],
+        F: [],
+        S: ["P"],
+        P: [],
+      };
+
+      const explore = (graph, visited, node) => {
+        if (visited.has(node)) {
+          return;
+        }
+        const stack = [node];
+        while (!!stack.length) {
+          const current = stack.pop();
+          if (!visited.has(current)) {
+            visited.add(current);
+            for (const neighbor of graph[current]) {
+              stack.push(neighbor);
+            }
+          }
+        }
+        return true;
+      };
+
+      const getIslandNumber = (graph) => {
+        let count = 0;
+        const visited = new Set();
+        for (const el in graph) {
+          if (explore(graph, visited, el) === true) {
+            count++;
+          }
+        }
+        return count;
+      };
+      console.log(getIslandNumber(graph));
+      // const dfs = (graph, source) => {
+      //   const visited = new Set();
+      //   const stack = [source];
+
+      //   while (!!stack.length) {
+      //     const current = stack.pop();
+      //     if (!visited.has(current)) {
+      //       visited.add(current);
+      //       console.log(current);
+      //       for (const node of graph[current]) {
+      //         stack.push(node);
+      //       }
+      //     }
+      //   }
+      // };
+      // dfs(graph, "a");
+
+      // const bfs = (graph, source) => {
+      //   const visited = new Set();
+      //   const queue = [source];
+      //   while (!!queue.length) {
+      //     const current = queue.shift();
+      //     if (!visited.has(current)) {
+      //       console.log(current);
+      //       visited.add(current);
+      //       for (const neighbor of graph[current]) {
+      //         if (!visited.has(neighbor)) {
+      //           queue.push(neighbor);
+      //         }
+      //       }
+      //     }
+      //   }
+      // };
+      // bfs(graph, "a");
+
+      // const hasPathBfs = (graph, source, dest) => {
+      //   const visited = new Set();
+      //   const queue = [source];
+      //   while (!!queue.length) {
+      //     const current = queue.shift();
+      //     if (current === dest) {
+      //       return true;
+      //     }
+      //     if (!visited.has(current)) {
+      //       visited.add(current);
+      //       for (const neighbor of graph[current]) {
+      //         if (!visited.has(neighbor)) {
+      //           queue.push(neighbor);
+      //         }
+      //       }
+      //     }
+      //   }
+      //   return false;
+      // };
+      // console.log(hasPathBfs(graph, "E", "F"));
+
+      // const hasPathDfs = (graph, source, dest) => {
+      //   const visited = new Set();
+
+      //   const stack = [source];
+      //   while (!!stack.length) {
+      //     const current = stack.pop();
+      //     if (current === dest) {
+      //       return true;
+      //     }
+      //     if (!visited.has(current)) {
+      //       visited.add(current);
+      //       for (const neighbor of graph[current]) {
+      //         stack.push(neighbor);
+      //       }
+      //     }
+      //   }
+      //   return false;
+      // };
+
+      // console.log(hasPathDfs(graph, "D", "A"));
+
+      // const dfs = (graph, source, visited = new Set()) => {
+      //   if (visited.has(source)) return;
+      //   console.log(source);
+      //   visited.add(source);
+      //   for (const neighbor of graph[source]) {
+      //     dfs(graph, neighbor, visited);
+      //   }
+      // };
+      // dfs(graph, "a");
+    </script>
+  </body>
+</html>
