@@ -8,130 +8,58 @@
   <body>
     <script>
       const graph = {
-        A: ["B", "C"],
-        B: ["D"],
-        C: ["D", "E"],
-        D: ["F"],
-        E: ["F"],
-        F: [],
-        S: ["P"],
-        P: [],
+        // Network 1 (size 3)
+        A1: ["B1", "C1"],
+        B1: [],
+        C1: [],
+
+        // Network 2 (size 4)
+        A2: ["B2", "C2"],
+        B2: ["D2"],
+        C2: [],
+        D2: [],
+
+        // Network 3 (size 5)
+        A3: ["B3", "C3"],
+        B3: ["D3"],
+        C3: ["E3"],
+        D3: [],
+        E3: [],
+
+        // Network 4 (size 6)
+        A4: ["B4", "C4"],
+        B4: ["D4"],
+        C4: ["E4"],
+        D4: ["F4"],
+        E4: [],
+        F4: [],
       };
 
-      const explore = (graph, visited, node) => {
-        if (visited.has(node)) {
-          return;
-        }
-        const stack = [node];
-        while (!!stack.length) {
-          const current = stack.pop();
-          if (!visited.has(current)) {
-            visited.add(current);
-            for (const neighbor of graph[current]) {
-              stack.push(neighbor);
-            }
-          }
-        }
-        return true;
-      };
-
-      const getIslandNumber = (graph) => {
-        let count = 0;
+      const biggestComponent = (graph) => {
         const visited = new Set();
-        for (const el in graph) {
-          if (explore(graph, visited, el) === true) {
-            count++;
+        let maxNodesNumber = 0;
+
+        for (const node in graph) {
+          if (!visited.has(node)) {
+            const nodesNumber = getNodesNumber(graph, node);
+            if (nodesNumber > maxNodesNumber) maxNodesNumber = nodesNumber;
+            visited.add(node);
           }
         }
-        return count;
+
+        return maxNodesNumber;
       };
-      console.log(getIslandNumber(graph));
-      // const dfs = (graph, source) => {
-      //   const visited = new Set();
-      //   const stack = [source];
 
-      //   while (!!stack.length) {
-      //     const current = stack.pop();
-      //     if (!visited.has(current)) {
-      //       visited.add(current);
-      //       console.log(current);
-      //       for (const node of graph[current]) {
-      //         stack.push(node);
-      //       }
-      //     }
-      //   }
-      // };
-      // dfs(graph, "a");
+      const getNodesNumber = (graph, node) => {
+        let nodesNumber = 0;
 
-      // const bfs = (graph, source) => {
-      //   const visited = new Set();
-      //   const queue = [source];
-      //   while (!!queue.length) {
-      //     const current = queue.shift();
-      //     if (!visited.has(current)) {
-      //       console.log(current);
-      //       visited.add(current);
-      //       for (const neighbor of graph[current]) {
-      //         if (!visited.has(neighbor)) {
-      //           queue.push(neighbor);
-      //         }
-      //       }
-      //     }
-      //   }
-      // };
-      // bfs(graph, "a");
+        for (const neighbor of graph[node]) {
+          nodesNumber += getNodesNumber(graph, neighbor);
+        }
+        return nodesNumber + 1;
+      };
 
-      // const hasPathBfs = (graph, source, dest) => {
-      //   const visited = new Set();
-      //   const queue = [source];
-      //   while (!!queue.length) {
-      //     const current = queue.shift();
-      //     if (current === dest) {
-      //       return true;
-      //     }
-      //     if (!visited.has(current)) {
-      //       visited.add(current);
-      //       for (const neighbor of graph[current]) {
-      //         if (!visited.has(neighbor)) {
-      //           queue.push(neighbor);
-      //         }
-      //       }
-      //     }
-      //   }
-      //   return false;
-      // };
-      // console.log(hasPathBfs(graph, "E", "F"));
-
-      // const hasPathDfs = (graph, source, dest) => {
-      //   const visited = new Set();
-
-      //   const stack = [source];
-      //   while (!!stack.length) {
-      //     const current = stack.pop();
-      //     if (current === dest) {
-      //       return true;
-      //     }
-      //     if (!visited.has(current)) {
-      //       visited.add(current);
-      //       for (const neighbor of graph[current]) {
-      //         stack.push(neighbor);
-      //       }
-      //     }
-      //   }
-      //   return false;
-      // };
-
-      // console.log(hasPathDfs(graph, "D", "A"));
-
-      // const dfs = (graph, source, visited = new Set()) => {
-      //   if (visited.has(source)) return;
-      //   console.log(source);
-      //   visited.add(source);
-      //   for (const neighbor of graph[source]) {
-      //     dfs(graph, neighbor, visited);
-      //   }
-      // };
-      // dfs(graph, "a");
+      console.log(biggestComponent(graph));
     </script>
   </body>
 </html>
