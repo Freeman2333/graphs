@@ -8,58 +8,51 @@
   <body>
     <script>
       const graph = {
-        // Network 1 (size 3)
-        A1: ["B1", "C1"],
-        B1: [],
-        C1: [],
-
-        // Network 2 (size 4)
-        A2: ["B2", "C2"],
-        B2: ["D2"],
-        C2: [],
-        D2: [],
-
-        // Network 3 (size 5)
-        A3: ["B3", "C3"],
-        B3: ["D3"],
-        C3: ["E3"],
-        D3: [],
-        E3: [],
-
-        // Network 4 (size 6)
-        A4: ["B4", "C4"],
-        B4: ["D4"],
-        C4: ["E4"],
-        D4: ["F4"],
-        E4: [],
-        F4: [],
+        A: ["B", "C", "D"],
+        B: ["E", "F"],
+        C: ["G"],
+        D: ["H", "I"],
+        E: ["J"],
+        F: ["K"],
+        G: ["L"],
+        H: ["M"],
+        I: ["N", "O"],
+        J: [],
+        K: ["P"],
+        L: ["Q", "R"],
+        M: ["S"],
+        N: [],
+        O: ["T"],
+        P: ["U"],
+        Q: [],
+        R: [],
+        S: [],
+        T: [],
+        U: [],
       };
 
-      const biggestComponent = (graph) => {
+      const getShortestPath = (graph, start, end) => {
         const visited = new Set();
-        let maxNodesNumber = 0;
+        const queue = [[start, 0]];
 
-        for (const node in graph) {
+        while (queue.length) {
+          const [node, previousDistance] = queue.shift();
+
+          if (node === end) {
+            return previousDistance;
+          }
           if (!visited.has(node)) {
-            const nodesNumber = getNodesNumber(graph, node);
-            if (nodesNumber > maxNodesNumber) maxNodesNumber = nodesNumber;
             visited.add(node);
+            for (const neighbor of graph[node]) {
+              queue.push([neighbor, previousDistance + 1]);
+            }
           }
         }
 
-        return maxNodesNumber;
+        return -1;
       };
 
-      const getNodesNumber = (graph, node) => {
-        let nodesNumber = 0;
-
-        for (const neighbor of graph[node]) {
-          nodesNumber += getNodesNumber(graph, neighbor);
-        }
-        return nodesNumber + 1;
-      };
-
-      console.log(biggestComponent(graph));
+      console.log(getShortestPath(graph, "U", "T"));
     </script>
   </body>
 </html>
