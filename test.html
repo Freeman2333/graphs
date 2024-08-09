@@ -7,52 +7,45 @@
   </head>
   <body>
     <script>
+      // функция поиска вариантов перелетов из точки
+      // function fetchFlights (from: string): Promise<string[]>;
+      // Например, для
+
+      // findPath("A", "N", fetchFlights); // Promise.resolve(['A', 'B', 'N'])
+      // findPath("A", "S", fetchFlights); // Promise.resolve(['A', 'D', 'F', 'S'
+      //findPath('B', 'S', fetchFlights) // Promise.reject (new Error('No way'))
+      // функция поиска составного авиабилета
+
       const graph = {
-        A: ["B", "C", "D"],
-        B: ["E", "F"],
-        C: ["G"],
-        D: ["H", "I"],
-        E: ["J"],
-        F: ["K"],
-        G: ["L"],
-        H: ["M"],
-        I: ["N", "O"],
-        J: [],
-        K: ["P"],
-        L: ["Q", "R"],
-        M: ["S"],
-        N: [],
-        O: ["T"],
-        P: ["U"],
-        Q: [],
-        R: [],
-        S: [],
-        T: [],
-        U: [],
+        A: ["B", "D"],
+        B: ["C", "N", "Z"],
+        D: ["E", "F"],
+        F: ["S"],
       };
 
-      const getShortestPath = (graph, start, end) => {
-        const visited = new Set();
-        const queue = [[start, 0]];
+      function findPath(from, to, fetchFlights) {
+        return new Promise((resolve, reject) => {
+          const queue = [[from, [from]]];
 
-        while (queue.length) {
-          const [node, previousDistance] = queue.shift();
+          while (queue.length) {
+            let [node, route] = queue.shift();
 
-          if (node === end) {
-            return previousDistance;
-          }
-          if (!visited.has(node)) {
-            visited.add(node);
-            for (const neighbor of graph[node]) {
-              queue.push([neighbor, previousDistance + 1]);
+            if (node === to) {
+              resolve(route);
+            }
+            for (const neighbor of graph[node] || []) {
+              const localRoute = [...route, neighbor];
+              queue.push([neighbor, localRoute]);
             }
           }
-        }
 
-        return -1;
-      };
+          reject(new Error("No way"));
+        });
+      }
 
-      console.log(getShortestPath(graph, "U", "T"));
+      findPath("B", "S")
+        .then((v) => console.log({ v }))
+        .catch((e) => console.log({ e }));
     </script>
   </body>
 </html>
