@@ -11,20 +11,28 @@
     <button id="main-button2">Click Me promise</button> -->
 
     <script>
-      const numbers = [1, 5, 8, 12, 1, 2];
-      const findSumPair = (numbers, k) => {
-        const map = new Map();
-        for (let i = 0; i < numbers.length; i++) {
-          const complement = k - numbers[i];
-          if (map.has(complement)) {
-            console.log({ complement, map });
-            return [map.get(complement), i];
+      const promiseAll = (arr) => {
+        return new Promise((res, rej) => {
+          const result = [];
+          let completedPromises = 0;
+
+          for (let i = 0; i < arr.length; i++) {
+            arr[i]
+              .then((val) => {
+                result[i] = val; // Store result at correct index
+                completedPromises++;
+
+                // Resolve only when all promises are resolved
+                if (completedPromises === arr.length) {
+                  res(result);
+                }
+              })
+              .catch((err) => {
+                rej(err); // Reject immediately on the first error
+              });
           }
-          map.set(numbers[i], i);
-        }
-        return [0, 0];
+        });
       };
-      console.log(findSumPair(numbers, 17));
     </script>
   </body>
 </html>
