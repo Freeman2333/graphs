@@ -11,28 +11,87 @@
     <button id="main-button2">Click Me promise</button> -->
 
     <script>
-      const promiseAll = (arr) => {
-        return new Promise((res, rej) => {
-          const result = [];
-          let completedPromises = 0;
+     import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
-          for (let i = 0; i < arr.length; i++) {
-            arr[i]
-              .then((val) => {
-                result[i] = val; // Store result at correct index
-                completedPromises++;
+function WeatherDashboard() {
+  // Mock weather data for some cities
+  const mockWeatherData = {
+    'New York': {
+      temperature: '22°C',
+      humidity: '56%',
+      windSpeed: '15 km/h',
+    },
+    'Los Angeles': {
+      temperature: '27°C',
+      humidity: '45%',
+      windSpeed: '10 km/h',
+    },
+    'London': {
+      temperature: '15°C',
+      humidity: '70%',
+      windSpeed: '20 km/h',
+    },
+  };
 
-                // Resolve only when all promises are resolved
-                if (completedPromises === arr.length) {
-                  res(result);
-                }
-              })
-              .catch((err) => {
-                rej(err); // Reject immediately on the first error
-              });
-          }
-        });
-      };
+  const [city, setCity] = useState('');
+  const [weather, setWeather] = useState(null);
+  const [previousCities, setPreviousCities] = useState([]);
+
+  const handleSearch = () => {
+    if (mockWeatherData[city]) {
+      setWeather(mockWeatherData[city]);
+      setPreviousCities((prev) => [...new Set([city, ...prev])]);
+    } else {
+      setWeather(null); // Clear previous data if city is not found
+    }
+  };
+
+  const handleCityClick = (cityName) => {
+    setCity(cityName);
+    setWeather(mockWeatherData[cityName]);
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        id="citySearch"
+        placeholder="Search for a city..."
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+      />
+      <button id="searchButton" onClick={handleSearch}>Search</button>
+
+      <div id="weatherData">
+        {weather ? (
+          <>
+            <div>Temperature: {weather.temperature}</div>
+            <div>Humidity: {weather.humidity}</div>
+            <div>Wind Speed: {weather.windSpeed}</div>
+          </>
+        ) : (
+          <div>City not found.</div>
+        )}
+      </div>
+
+      <div id="previousSearches">
+        {previousCities.map((cityName) => (
+          <button
+            key={cityName}
+            onClick={() => handleCityClick(cityName)}
+          >
+            {cityName}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const root = createRoot(document.getElementById('root'));
+root.render(<WeatherDashboard />);
+
     </script>
   </body>
 </html>
